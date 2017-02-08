@@ -1,0 +1,9 @@
+{
+  "name": "Inside-Out-GraphQL-API",
+  "version": "1.0.0",
+  "description": "Educational project: A GraphQL API using inside out TDD",
+  "main": "index.js",
+  "repository": "https://github.com/scottrangerio/Inside-Out-GraphQL-API.git",
+  "author": "Scott Ranger <millenniumnight@googlemail.com>",
+  "license": "MIT"
+}
