@@ -1777,6 +1777,12 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
 
+neo4j-driver@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-1.1.0.tgz#1d8aefd9f37eae4c92a6f28ec2bcfebabdf12cf2"
+  dependencies:
+    babel-runtime "^6.18.0"
+
 node-emoji@^1.4.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/node-emoji/-/node-emoji-1.5.1.tgz#fd918e412769bf8c448051238233840b2aff16a1"

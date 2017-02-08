@@ -13,6 +13,12 @@
     "jest": "^18.1.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "automock": true
+  },
+  "dependencies": {
+    "neo4j-driver": "^1.1.0"
   }
 }
