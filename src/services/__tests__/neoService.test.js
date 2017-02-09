@@ -61,8 +61,6 @@ describe("neoService", () => {
       expect(movie).toEqual(expected);
     });
 
-    // test re throws errors and closes session
-
     it("should close the neo4j session after successfully finding a result", async () => {
       driver.session().run.mockImplementation(mockImplementation);
 
