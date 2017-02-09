@@ -5,13 +5,14 @@
 const driver = (() => {
   const close = jest.fn();
   const session = (() => {
-    const run = jest.fn(() => {
+    const run = jest.fn();
 
+    return jest.fn(() => {
+      return {
+        run,
+        close,
+      };
     });
-
-    return {
-      run,
-    };
   })();
 
   return jest.fn(() => {

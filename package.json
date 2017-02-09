@@ -9,6 +9,7 @@
   "devDependencies": {
     "babel-jest": "^18.0.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-polyfill": "^6.22.0",
     "babel-preset-latest": "^6.22.0",
     "jest": "^18.1.0"
   },
@@ -16,7 +17,11 @@
     "test": "jest --coverage"
   },
   "jest": {
-    "automock": true
+    "automock": true,
+    "modulePathIgnorePatterns": [
+      "<rootDir>/queries",
+      "<rootDir>/test-entities"
+    ]
   },
   "dependencies": {
     "neo4j-driver": "^1.1.0"
