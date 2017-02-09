@@ -1,9 +1,10 @@
 // @flow
 
-"ust strict";
+"use strict";
 
 import getMovieByIdQuery from '../queries/getMovieByIdQuery';
 import getMoviesByDirectorQuery from '../queries/getMoviesByDirectorQuery';
+import getMoviesFeaturingActorQuery from '../queries/getMoviesFeaturingActorQuery';
 import driver from '../drivers/neoDriver';
 import Movie from '../domain/Movie';
 import { map } from 'lodash';
@@ -26,9 +27,7 @@ const _sessionInjector = (fn: Function) => {
   }
 }
 
-const getMoviesByDirector = _sessionInjector(async (session: session, name: string) => {
-  const { records } = await session.run(getMoviesByDirectorQuery, { name });
-
+const _generateArrayFromRecords = (records): Array<Movie> => {
   const movies = map(records, (value) => {
     const movie = new Movie();
 
@@ -39,23 +38,36 @@ const getMoviesByDirector = _sessionInjector(async (session: session, name: stri
   });
 
   return movies;
+};
+
+const getMoviesFeaturingActor = _sessionInjector(async (session: session, name: string) => {
+  const { records } = await session.run(getMoviesFeaturingActorQuery, { name });
+
+  const movies = _generateArrayFromRecords(records);
+
+  return movies;
+});
+
+const getMoviesByDirector = _sessionInjector(async (session: session, name: string) => {
+  const { records } = await session.run(getMoviesByDirectorQuery, { name });
+
+  const movies = _generateArrayFromRecords(records);
+
+  return movies;
 });
 
 const getMovieById = _sessionInjector(async (session: session, id: number): Promise<?Movie> => {
   const { records } = await session.run(getMovieByIdQuery, { id });
 
-  if (!records.length) throw new Error("No movie found for the given id");
+  const movies = _generateArrayFromRecords(records);
 
-  const result = records[0];
-  const movie = new Movie();
+  if (!movies.length) throw new Error("No movie found for the given id");
 
-  movie.id = result.get('id');
-  movie.name = result.get('name');
-
-  return movie;
+  return movies[0];
 });
 
 export {
   getMovieById,
   getMoviesByDirector,
+  getMoviesFeaturingActor,
 }
