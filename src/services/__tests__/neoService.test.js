@@ -6,13 +6,14 @@ import { getMovieById } from '../neoService';
 import driver from '../../drivers/neoDriver';
 import getMovieByIdQuery from '../../queries/getMovieByIdQuery';
 import Movie from '../../domain/Movie';
+import { slice } from 'lodash';
 
 jest.unmock('../neoService');
 jest.unmock('../../domain/Movie');
 
-const syncify = async (fn) => {
+const syncify = async function(fn, ...args: any): Function {
   try {
-    const result = await fn();
+    const result = await fn(slice(arguments, 1, arguments.length));
     return () => { return result; };
   } catch (e) {
     return () => { throw e; };
@@ -61,6 +62,18 @@ describe("neoService", () => {
       expect(movie).toEqual(expected);
     });
 
+    it("should throw an error if it finds no results", async () => {
+      driver.session().run.mockImplementation(async () => {
+        return {
+          records: []
+        }
+      });
+
+      const fn = await syncify(getMovieById,id);
+
+      expect(fn).toThrow();
+    });
+
     it("should close the neo4j session after successfully finding a result", async () => {
       driver.session().run.mockImplementation(mockImplementation);
 
@@ -88,7 +101,7 @@ describe("neoService", () => {
         throw new Error("Dummy error");
       });
 
-      const fn = await syncify(getMovieById);
+      const fn = await syncify(getMovieById, id);
 
       expect(fn).toThrow();
     });
