@@ -21,6 +21,9 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/queries",
       "<rootDir>/test-entities"
+    ],
+    "unmockedModulePathPatterns": [
+      "lodash"
     ]
   },
   "dependencies": {
