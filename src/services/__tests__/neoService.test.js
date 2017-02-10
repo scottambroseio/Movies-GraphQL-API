@@ -2,11 +2,12 @@
 
 "use strict";
 
-import { getMovieById, getMoviesByDirector, getMoviesFeaturingActor } from '../neoService';
+import { getMovieById, getMoviesByDirector, getMoviesFeaturingActor, getMoviesOfGenre } from '../neoService';
 import driver from '../../drivers/neoDriver';
 import getMovieByIdQuery from '../../queries/getMovieByIdQuery';
 import getMoviesByDirectorQuery from '../../queries/getMoviesByDirectorQuery';
 import getMoviesFeaturingActorQuery from '../../queries/getMoviesFeaturingActorQuery';
+import getMoviesOfGenreQuery from '../../queries/getMoviesOfGenreQuery';
 import Movie from '../../domain/Movie';
 import { slice } from 'lodash';
 
@@ -224,6 +225,66 @@ describe("neoService", () => {
 
       try {
         await getMoviesFeaturingActor(name);
+      } catch(e) {
+
+      } finally {
+        expect(driver.session().close).toHaveBeenCalledTimes(1);
+      }
+    });
+  });
+
+  describe("getMoviesOfGenre", () => {
+    const name = "Test Genre";
+
+    it("should use the neo driver to run the correct query with the correct params", async () => {
+      driver.session().run.mockImplementation(workingMockImplementation);
+
+      await getMoviesOfGenre(name);
+
+      expect(driver.session().run).toBeCalledWith(getMoviesOfGenreQuery, { name });
+    });
+
+    it("should return the correct movies when given a valid genre", async () => {
+      const expected = [new Movie()];
+      expected[0].id = movieId;
+      expected[0].name = movieName;
+
+      driver.session().run.mockImplementation(workingMockImplementation);
+
+      const movies = await getMoviesOfGenre(name);
+
+      expect(movies).toEqual(expected);
+    });
+
+    it("should return an empty list if no movies are found", async () => {
+      driver.session().run.mockImplementation(noResultMockImplementation);
+
+      const movies = await getMoviesOfGenre(name);
+
+      expect(movies).toEqual([]);
+    });
+
+    it("should rethrow any exceptions from the neo driver", async () => {
+      driver.session().run.mockImplementation(throwingErrorMockImplementation);
+
+      const fn = await syncify(getMoviesOfGenre, name);
+
+      expect(fn).toThrow();
+    });
+
+    it("should close the neo4j session after successfully finding a result", async () => {
+      driver.session().run.mockImplementation(workingMockImplementation);
+
+      await getMoviesOfGenre(name);
+
+      expect(driver.session().close).toHaveBeenCalledTimes(1);
+    });
+
+    it("should close the neo4j session when the neo driver throws an exception", async () => {
+      driver.session().run.mockImplementation(throwingErrorMockImplementation);
+
+      try {
+        await getMoviesOfGenre(name);
       } catch(e) {
 
       } finally {

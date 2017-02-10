@@ -5,6 +5,7 @@
 import getMovieByIdQuery from '../queries/getMovieByIdQuery';
 import getMoviesByDirectorQuery from '../queries/getMoviesByDirectorQuery';
 import getMoviesFeaturingActorQuery from '../queries/getMoviesFeaturingActorQuery';
+import getMoviesOfGenreQuery from '../queries/getMoviesOfGenreQuery';
 import driver from '../drivers/neoDriver';
 import Movie from '../domain/Movie';
 import { map } from 'lodash';
@@ -66,8 +67,17 @@ const getMovieById = _sessionInjector(async (session: session, id: number): Prom
   return movies[0];
 });
 
+const getMoviesOfGenre = _sessionInjector(async (session: session, name: string) => {
+  const { records } = await session.run(getMoviesOfGenreQuery, { name });
+
+  const movies = _generateArrayFromRecords(records);
+
+  return movies;
+});
+
 export {
   getMovieById,
   getMoviesByDirector,
   getMoviesFeaturingActor,
+  getMoviesOfGenre,
 }
