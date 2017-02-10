@@ -28,7 +28,7 @@ const _sessionInjector = (fn: Function) => {
   }
 }
 
-const _generateArrayFromRecords = (records): Array<Movie> => {
+const _generateMovieArrayFromRecords = (records): Array<Movie> => {
   const movies = map(records, (value) => {
     const movie = new Movie();
 
@@ -44,7 +44,7 @@ const _generateArrayFromRecords = (records): Array<Movie> => {
 const getMoviesFeaturingActor = _sessionInjector(async (session: session, name: string) => {
   const { records } = await session.run(getMoviesFeaturingActorQuery, { name });
 
-  const movies = _generateArrayFromRecords(records);
+  const movies = _generateMovieArrayFromRecords(records);
 
   return movies;
 });
@@ -52,7 +52,7 @@ const getMoviesFeaturingActor = _sessionInjector(async (session: session, name: 
 const getMoviesByDirector = _sessionInjector(async (session: session, name: string) => {
   const { records } = await session.run(getMoviesByDirectorQuery, { name });
 
-  const movies = _generateArrayFromRecords(records);
+  const movies = _generateMovieArrayFromRecords(records);
 
   return movies;
 });
@@ -60,7 +60,7 @@ const getMoviesByDirector = _sessionInjector(async (session: session, name: stri
 const getMovieById = _sessionInjector(async (session: session, id: number): Promise<?Movie> => {
   const { records } = await session.run(getMovieByIdQuery, { id });
 
-  const movies = _generateArrayFromRecords(records);
+  const movies = _generateMovieArrayFromRecords(records);
 
   if (!movies.length) throw new Error("No movie found for the given id");
 
@@ -70,7 +70,7 @@ const getMovieById = _sessionInjector(async (session: session, id: number): Prom
 const getMoviesOfGenre = _sessionInjector(async (session: session, name: string) => {
   const { records } = await session.run(getMoviesOfGenreQuery, { name });
 
-  const movies = _generateArrayFromRecords(records);
+  const movies = _generateMovieArrayFromRecords(records);
 
   return movies;
 });

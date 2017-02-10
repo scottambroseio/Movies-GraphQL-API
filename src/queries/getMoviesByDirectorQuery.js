@@ -5,5 +5,5 @@
 export default `
   MATCH(m:Movie)-[:DIRECTED_BY] -> (d:Director)
   WHERE d.name = { name }
-  RETURN m as movie
+  RETURN ID(m) as id, m.name as name
 `;
